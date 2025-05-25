@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "clean-cab"
+version = "0.1.0"
+description = "Based on BME668 sensor"
+authors = ["mhanssler <mhanssler@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+adafruit-circuitpython-bme680 = "^3.7.12"
+board = "^1.0"
+numpy = "^2.2.6"
+datetime = "^5.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
