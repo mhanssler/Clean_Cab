@@ -1,0 +1,19 @@
+# Smart Sniffer - AV Cabin Air Quality Monitor
+# Python dependencies for Raspberry Pi B+
+
+# Core dependencies
+smbus2>=0.4.0          # I2C communication for BME688
+
+# Data handling
+# (using stdlib: json, csv, gzip, dataclasses)
+
+# Optional: Enhanced features
+# numpy>=1.21.0        # Uncomment for advanced signal processing
+# scipy>=1.7.0         # Uncomment for statistical analysis
+
+# Development/Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Documentation
+# sphinx>=4.0.0        # Uncomment to generate docs

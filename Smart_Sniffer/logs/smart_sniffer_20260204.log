@@ -1,0 +1,13 @@
+2026-02-04 10:36:23,813 [INFO] SmartSniffer: Initializing Smart Sniffer...
+2026-02-04 10:36:23,813 [INFO] SmartSniffer: Running in simulation mode
+2026-02-04 10:36:23,813 [INFO] SmartSniffer: Odor classifier initialized
+2026-02-04 10:36:23,813 [INFO] SmartSniffer: Alert manager initialized
+2026-02-04 10:36:23,820 [INFO] SmartSniffer: Data logger started
+2026-02-04 10:36:23,821 [INFO] SmartSniffer: Starting air quality monitoring (interval: 1.0s, warmup: 60s)
+2026-02-04 10:39:38,039 [INFO] SmartSniffer: HVAC ventilation request: 50%
+2026-02-04 10:39:38,039 [INFO] SmartSniffer.Alerts: Alert generated: mild_odor - Mild air quality issue detected. Increasing ventilation.
+2026-02-04 10:43:38,299 [INFO] SmartSniffer: HVAC ventilation request: 50%
+2026-02-04 10:43:38,299 [INFO] SmartSniffer.Alerts: Alert generated: mild_odor - Mild air quality issue detected. Increasing ventilation.
+2026-02-04 10:44:17,935 [INFO] SmartSniffer: Received signal 2, shutting down...
+2026-02-04 10:44:18,340 [INFO] SmartSniffer: Shutting down Smart Sniffer...
+2026-02-04 10:44:18,340 [INFO] SmartSniffer: Data logger stopped
