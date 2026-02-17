@@ -75,9 +75,6 @@ pip3 install -r requirements.txt
 # Live sensor mode
 python3 -m src.main
 
-# Simulation mode (no sensor required)
-python3 -m src.main --simulate
-
 # Custom configuration
 python3 -m src.main --config config/default_config.json
 
@@ -93,7 +90,7 @@ python3 -m src.main --run-mode odor_test --test-type smoke --duration 180 --note
 ### Command Line Options
 
 ```
-usage: main.py [-h] [-c CONFIG] [-s] [-i INTERVAL] [-l LOG_DIR] [-v]
+usage: main.py [-h] [-c CONFIG] [-i INTERVAL] [-l LOG_DIR] [-v]
                [--run-mode {monitor,baseline,odor_test}] [--test-type TEST_TYPE]
                [--session-label SESSION_LABEL] [--notes NOTES] [--duration DURATION]
 
@@ -102,7 +99,6 @@ Smart Sniffer - AV Cabin Air Quality Monitor
 optional arguments:
   -h, --help            show this help message and exit
   -c, --config CONFIG   Path to configuration file (JSON)
-  -s, --simulate        Run in simulation mode (no sensor required)
   -i, --interval FLOAT  Sampling interval in seconds (default: 1.0)
   -l, --log-dir DIR     Log directory (default: logs)
   -v, --verbose         Enable verbose logging
@@ -112,6 +108,8 @@ optional arguments:
   --notes TEXT          Session notes stored in records
   --duration SECONDS    Auto-stop after a fixed runtime
 ```
+
+Note: The app now requires real BME688 hardware access and will exit with a setup error if I2C/smbus is unavailable.
 
 ### Recommended Data Collection Flow
 
@@ -140,7 +138,7 @@ optional arguments:
 ============================================================
   Sampling Rate: 1.0 Hz
   Warmup Period: 60 seconds
-  Mode: Live Sensor
+  Sensor Mode: Live Sensor
 ============================================================
 
 [   45s] T: 23.5°C | H: 42.3% | P: 1013.2hPa | Gas:  52340Ω | [Calibrating 75%]

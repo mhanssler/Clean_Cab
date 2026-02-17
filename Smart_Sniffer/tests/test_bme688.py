@@ -1,5 +1,5 @@
 """
-Tests for BME688 driver simulation mode
+Tests for BME688 driver data structures.
 """
 
 import pytest

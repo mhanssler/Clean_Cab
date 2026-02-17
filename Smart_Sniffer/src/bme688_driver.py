@@ -20,7 +20,7 @@ except ImportError:
         import smbus
         _SMBUS_AVAILABLE = True
     except ImportError:
-        smbus = None  # Will use simulation mode
+        smbus = None  # Hardware access unavailable until smbus is installed
 
 
 class SensorReading(NamedTuple):

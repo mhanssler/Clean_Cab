@@ -179,11 +179,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Path to configuration file (JSON)"
     )
     parser.add_argument(
-        "-s", "--simulate",
-        action="store_true",
-        help="Run in simulation mode (no sensor required)"
-    )
-    parser.add_argument(
         "-i", "--interval",
         type=float,
         default=1.0,
@@ -260,7 +255,6 @@ class SmartSniffer:
     def __init__(
         self,
         config: Optional[dict] = None,
-        simulate: bool = False,
         session_metadata: Optional[Dict[str, Any]] = None,
         run_duration_seconds: Optional[float] = None
     ):
@@ -269,12 +263,10 @@ class SmartSniffer:
         
         Args:
             config: Configuration dictionary
-            simulate: If True, use simulated sensor data (for testing)
             session_metadata: Labels and metadata attached to all logged data
             run_duration_seconds: Optional auto-stop runtime in seconds
         """
         self.config = _deep_merge_dict(DEFAULT_CONFIG, config or {})
-        self.simulate = simulate
         self.session_metadata = dict(session_metadata or {})
         self.run_mode = self.session_metadata.get("session_mode", RUN_MODE_MONITOR)
         self.test_type = self.session_metadata.get(
@@ -343,31 +335,23 @@ class SmartSniffer:
         
         try:
             # Initialize sensor (only if not simulating)
-            if not self.simulate:
-                try:
-                    from src.bme688_driver import _SMBUS_AVAILABLE
-                    if not _SMBUS_AVAILABLE:
-                        self.logger.warning(
-                            "I2C library not available - falling back to simulation mode"
-                        )
-                        self.simulate = True
-                    else:
-                        self.logger.info("Connecting to BME688 sensor...")
-                        self.sensor = BME688(
-                            i2c_bus=self.config["sensor"]["i2c_bus"],
-                            address=self.config["sensor"]["i2c_address"]
-                        )
-                        self.sensor.set_heater_profile(
-                            temperature=self.config["sensor"]["heater_temp"],
-                            duration_ms=self.config["sensor"]["heater_duration_ms"]
-                        )
-                        self.logger.info("BME688 sensor connected successfully")
-                except Exception as e:
-                    self.logger.warning(f"Sensor init failed: {e} - using simulation")
-                    self.simulate = True
-            
-            if self.simulate:
-                self.logger.info("Running in simulation mode")
+            from src.bme688_driver import _SMBUS_AVAILABLE
+            if not _SMBUS_AVAILABLE:
+                raise RuntimeError(
+                    "I2C/smbus library is not available. Install python3-smbus or "
+                    "smbus2 and enable I2C on the device."
+                )
+
+            self.logger.info("Connecting to BME688 sensor...")
+            self.sensor = BME688(
+                i2c_bus=self.config["sensor"]["i2c_bus"],
+                address=self.config["sensor"]["i2c_address"]
+            )
+            self.sensor.set_heater_profile(
+                temperature=self.config["sensor"]["heater_temp"],
+                duration_ms=self.config["sensor"]["heater_duration_ms"]
+            )
+            self.logger.info("BME688 sensor connected successfully")
             
             # Initialize classifier
             self.classifier = OdorClassifier()
@@ -422,32 +406,10 @@ class SmartSniffer:
         # In real implementation, this would interface with AV HVAC system
     
     def _read_sensor(self) -> SensorReading:
-        """Read from sensor or generate simulated data."""
-        if self.simulate:
-            return self._simulate_reading()
+        """Read from sensor hardware."""
+        if self.sensor is None:
+            raise RuntimeError("Sensor is not initialized.")
         return self.sensor.read()
-    
-    def _simulate_reading(self) -> SensorReading:
-        """Generate simulated sensor readings for testing."""
-        import random
-        
-        base_resistance = 50000  # Base resistance in clean air
-        
-        # Occasionally simulate odor events
-        if random.random() < 0.05:  # 5% chance of odor
-            # Simulate resistance drop (odor detection)
-            resistance_factor = random.uniform(0.2, 0.8)
-        else:
-            # Normal variation
-            resistance_factor = random.uniform(0.9, 1.1)
-        
-        return SensorReading(
-            temperature=22.0 + random.uniform(-2, 2),
-            humidity=45.0 + random.uniform(-10, 10),
-            pressure=1013.25 + random.uniform(-5, 5),
-            gas_resistance=base_resistance * resistance_factor,
-            timestamp=time.time()
-        )
     
     def run(self) -> None:
         """Main sampling loop."""
@@ -476,7 +438,7 @@ class SmartSniffer:
         print("="*60)
         print(f"  Sampling Rate: {1/interval:.1f} Hz")
         print(f"  Warmup Period: {warmup} seconds")
-        print(f"  Sensor Mode: {'Simulation' if self.simulate else 'Live Sensor'}")
+        print("  Sensor Mode: Live Sensor")
         print(f"  Run Mode: {self.run_mode}")
         print(f"  Test Type: {self.test_type}")
         if self.session_label:
@@ -627,7 +589,7 @@ class SmartSniffer:
         """Get current system status."""
         return {
             "running": self._running,
-            "mode": "simulation" if self.simulate else "live",
+            "mode": "live",
             "run_mode": self.run_mode,
             "test_type": self.test_type,
             "session_label": self.session_label,
@@ -668,7 +630,6 @@ def main():
     # Create and run application
     app = SmartSniffer(
         config=config,
-        simulate=args.simulate,
         session_metadata=session_metadata,
         run_duration_seconds=args.duration
     )

@@ -34,3 +34,8 @@ def test_odor_test_accepts_normalized_dashed_label():
 def test_baseline_mode_rejects_non_baseline_test_type():
     with pytest.raises(SystemExit):
         parse_cli_args(["--run-mode", "baseline", "--test-type", "smoke"])
+
+
+def test_simulate_flag_is_not_supported():
+    with pytest.raises(SystemExit):
+        parse_cli_args(["--simulate"])
