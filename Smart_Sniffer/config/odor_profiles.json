@@ -1,0 +1,91 @@
+{
+  "odor_profiles": {
+    "BODY_ODOR": {
+      "description": "Human perspiration and sweat",
+      "resistance_drop_min": 0.3,
+      "resistance_drop_max": 0.7,
+      "onset_rate": "gradual",
+      "decay_rate": "slow",
+      "typical_duration_minutes": 15,
+      "recommended_hvac_level": 75
+    },
+    "FLATULENCE": {
+      "description": "Intestinal gas (methane, hydrogen sulfide)",
+      "resistance_drop_min": 0.2,
+      "resistance_drop_max": 0.6,
+      "onset_rate": "rapid",
+      "decay_rate": "moderate",
+      "typical_duration_minutes": 3,
+      "recommended_hvac_level": 100
+    },
+    "BAD_BREATH": {
+      "description": "Halitosis from oral bacteria",
+      "resistance_drop_min": 0.5,
+      "resistance_drop_max": 0.8,
+      "onset_rate": "moderate",
+      "decay_rate": "moderate",
+      "typical_duration_minutes": 5,
+      "recommended_hvac_level": 50
+    },
+    "FOOD_STRONG": {
+      "description": "Pungent foods (garlic, onion, fish, curry)",
+      "resistance_drop_min": 0.2,
+      "resistance_drop_max": 0.5,
+      "onset_rate": "gradual",
+      "decay_rate": "very_slow",
+      "typical_duration_minutes": 30,
+      "recommended_hvac_level": 75
+    },
+    "FOOD_FAST": {
+      "description": "Fast food and fried foods",
+      "resistance_drop_min": 0.3,
+      "resistance_drop_max": 0.6,
+      "onset_rate": "moderate",
+      "decay_rate": "slow",
+      "typical_duration_minutes": 20,
+      "recommended_hvac_level": 75
+    },
+    "SMOKE": {
+      "description": "Cigarette, cigar, or vape residue",
+      "resistance_drop_min": 0.1,
+      "resistance_drop_max": 0.4,
+      "onset_rate": "gradual",
+      "decay_rate": "very_slow",
+      "typical_duration_minutes": 60,
+      "recommended_hvac_level": 100
+    },
+    "ILLNESS": {
+      "description": "Vomit and sickness indicators",
+      "resistance_drop_min": 0.05,
+      "resistance_drop_max": 0.3,
+      "onset_rate": "rapid",
+      "decay_rate": "slow",
+      "typical_duration_minutes": 30,
+      "recommended_hvac_level": 100,
+      "emergency_protocol": true
+    }
+  },
+  "heater_profiles": {
+    "standard": {
+      "description": "Standard profile for general odor detection",
+      "temperature_c": 320,
+      "duration_ms": 150
+    },
+    "high_sensitivity": {
+      "description": "Higher temperature for better VOC sensitivity",
+      "temperature_c": 350,
+      "duration_ms": 200
+    },
+    "low_power": {
+      "description": "Lower power consumption profile",
+      "temperature_c": 280,
+      "duration_ms": 100
+    }
+  },
+  "notes": {
+    "training_required": "These profiles are baseline estimates. Use BME AI-Studio to collect training data and generate optimized classification parameters.",
+    "resistance_drop": "Values represent ratio of current resistance to baseline. Lower = more VOCs detected.",
+    "onset_rate": "How quickly the odor appears: rapid (<2s), moderate (2-10s), gradual (>10s)",
+    "decay_rate": "How quickly the odor dissipates: rapid (<1min), moderate (1-5min), slow (5-15min), very_slow (>15min)"
+  }
+}

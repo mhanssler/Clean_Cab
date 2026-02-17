@@ -1,0 +1,47 @@
+{
+  "sensor": {
+    "i2c_bus": 1,
+    "i2c_address": "0x76",
+    "heater_temp": 320,
+    "heater_duration_ms": 150,
+    "temp_oversampling": 2,
+    "humidity_oversampling": 2,
+    "pressure_oversampling": 2
+  },
+  "sampling": {
+    "interval_seconds": 1.0,
+    "warmup_seconds": 60
+  },
+  "classifier": {
+    "baseline_window_size": 300,
+    "baseline_percentile": 0.9,
+    "threshold_low": 0.7,
+    "threshold_moderate": 0.5,
+    "threshold_high": 0.3,
+    "threshold_severe": 0.15,
+    "temp_reference": 25.0,
+    "humidity_reference": 40.0
+  },
+  "logging": {
+    "directory": "logs",
+    "level": "INFO",
+    "csv_enabled": true,
+    "json_enabled": true,
+    "max_file_size_mb": 10.0,
+    "max_files": 100,
+    "compress_old": true
+  },
+  "alerts": {
+    "console_enabled": true,
+    "hvac_enabled": true,
+    "fleet_notify_enabled": false,
+    "fleet_api_url": "",
+    "fleet_api_key": ""
+  },
+  "av_integration": {
+    "hvac_control_pin": null,
+    "status_led_pin": null,
+    "can_bus_enabled": false,
+    "vehicle_id": "AV-PROTO-001"
+  }
+}
