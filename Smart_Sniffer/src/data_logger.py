@@ -12,7 +12,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import threading
 from queue import Queue, Empty
 
@@ -31,6 +31,7 @@ class LogConfig:
     compress_old_files: bool = True
     flush_interval_seconds: float = 5.0
     buffer_size: int = 100
+    session_metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 class DataLogger:
@@ -41,6 +42,7 @@ class DataLogger:
     
     def __init__(self, config: Optional[LogConfig] = None):
         self.config = config or LogConfig()
+        self._session_metadata = dict(self.config.session_metadata or {})
         
         # Ensure log directory exists
         self._log_dir = Path(self.config.log_directory)
@@ -114,7 +116,7 @@ class DataLogger:
     
     def _worker_loop(self) -> None:
         """Background worker for async logging."""
-        while self._running:
+        while True:
             try:
                 item = self._queue.get(timeout=1.0)
                 
@@ -130,6 +132,9 @@ class DataLogger:
                     self._flush_buffer()
                 
             except Empty:
+                if not self._running:
+                    break
+
                 # Periodic flush even if no new data
                 if self._buffer and time.time() - self._last_flush >= self.config.flush_interval_seconds:
                     self._flush_buffer()
@@ -182,6 +187,9 @@ class DataLogger:
             }
         else:
             return
+
+        if self._session_metadata:
+            record.update(self._session_metadata)
         
         self._buffer.append(record)
     
@@ -253,7 +261,10 @@ class DataLogger:
                 fieldnames=[
                     "type", "timestamp", "datetime",
                     "temperature", "humidity", "pressure", "gas_resistance",
-                    "odor_class", "severity", "confidence"
+                    "odor_class", "severity", "confidence",
+                    "session_id", "session_mode", "test_type",
+                    "expected_odor_class", "session_label", "session_notes",
+                    "event_name"
                 ],
                 extrasaction='ignore'
             )

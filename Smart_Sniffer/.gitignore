@@ -1,0 +1,10 @@
+# Runtime data
+logs/
+src/logs/
+
+# Python cache artifacts
+__pycache__/
+*.py[cod]
+
+# Test tooling cache
+.pytest_cache/

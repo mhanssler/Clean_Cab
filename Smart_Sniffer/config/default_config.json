@@ -1,12 +1,9 @@
 {
   "sensor": {
-    "i2c_bus": 1,
-    "i2c_address": "0x76",
-    "heater_temp": 320,
-    "heater_duration_ms": 150,
-    "temp_oversampling": 2,
-    "humidity_oversampling": 2,
-    "pressure_oversampling": 2
+    "serial_port": "COM5",
+    "baudrate": 115200,
+    "timeout_seconds": 2.0,
+    "startup_delay_seconds": 2.0
   },
   "sampling": {
     "interval_seconds": 1.0,

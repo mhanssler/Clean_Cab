@@ -82,8 +82,9 @@ class TestOdorClassifier:
         for _ in range(70):
             classifier.process_reading(50000, 25.0, 40.0)
         
-        # Simulate odor (30% of baseline resistance)
-        event = classifier.process_reading(15000, 25.0, 40.0)
+        # Simulate odor (sustained low resistance to pass smoothing window)
+        for _ in range(5):
+            event = classifier.process_reading(15000, 25.0, 40.0)
         
         assert event.severity != SeverityLevel.NONE
     
