@@ -88,6 +88,25 @@ If you only want raw Arduino stream capture:
 python tools/capture_bme688_serial_to_csv.py --port COM5 --baud 115200 --duration 300 --label clean
 ```
 
+
+## Baseline vs Class Analysis Tool
+
+Generate a baseline-comparison report across all class folders in `logs/`:
+
+```bash
+python tools/analyze_baseline_vs_classes.py --logs-root logs --baseline-folder Baseline
+```
+
+Optional output directory:
+
+```bash
+python tools/analyze_baseline_vs_classes.py --logs-root logs --baseline-folder Baseline --out-dir logs/analysis
+```
+
+The tool writes:
+- `logs/analysis/baseline_vs_classes_YYYYMMDD_HHMMSS.md`
+- `logs/analysis/baseline_vs_classes_YYYYMMDD_HHMMSS.json`
+
 ## Data Outputs
 
 - Main app:
@@ -96,6 +115,9 @@ python tools/capture_bme688_serial_to_csv.py --port COM5 --baud 115200 --duratio
   - `logs/smart_sniffer_YYYYMMDD.log`
 - Capture tool:
   - `logs/bme688_capture_YYYYMMDD_HHMMSS.csv`
+- Analysis tool:
+  - `logs/analysis/baseline_vs_classes_YYYYMMDD_HHMMSS.md`
+  - `logs/analysis/baseline_vs_classes_YYYYMMDD_HHMMSS.json`
 
 ## Project Structure
 
@@ -106,6 +128,7 @@ Smart_Sniffer/
 |   |-- bme688_baseline_csv_megacom5/
 |-- tools/
 |   |-- capture_bme688_serial_to_csv.py
+|   |-- analyze_baseline_vs_classes.py
 |-- src/
 |   |-- main.py
 |   |-- bme688_driver.py
