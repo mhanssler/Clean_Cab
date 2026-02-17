@@ -80,6 +80,12 @@ python3 -m src.main --simulate
 
 # Custom configuration
 python3 -m src.main --config config/default_config.json
+
+# Baseline data collection (clean air, 5 minutes)
+python3 -m src.main --run-mode baseline --duration 300 --test-type baseline_clean_air
+
+# Labeled odor test data collection (smoke example)
+python3 -m src.main --run-mode odor_test --test-type smoke --duration 180 --notes "rear seat sample"
 ```
 
 ## Usage
@@ -88,6 +94,8 @@ python3 -m src.main --config config/default_config.json
 
 ```
 usage: main.py [-h] [-c CONFIG] [-s] [-i INTERVAL] [-l LOG_DIR] [-v]
+               [--run-mode {monitor,baseline,odor_test}] [--test-type TEST_TYPE]
+               [--session-label SESSION_LABEL] [--notes NOTES] [--duration DURATION]
 
 Smart Sniffer - AV Cabin Air Quality Monitor
 
@@ -98,7 +106,31 @@ optional arguments:
   -i, --interval FLOAT  Sampling interval in seconds (default: 1.0)
   -l, --log-dir DIR     Log directory (default: logs)
   -v, --verbose         Enable verbose logging
+  --run-mode MODE       monitor, baseline, or odor_test
+  --test-type LABEL     Data label for the run (required for odor_test)
+  --session-label TEXT  Human-readable session name stored in records
+  --notes TEXT          Session notes stored in records
+  --duration SECONDS    Auto-stop after a fixed runtime
 ```
+
+### Recommended Data Collection Flow
+
+1. Run baseline calibration collection:
+   ```bash
+   python3 -m src.main --run-mode baseline --test-type baseline_clean_air --duration 300
+   ```
+2. Run one odor test session per target class:
+   ```bash
+   python3 -m src.main --run-mode odor_test --test-type body_odor --duration 180
+   python3 -m src.main --run-mode odor_test --test-type flatulence --duration 180
+   python3 -m src.main --run-mode odor_test --test-type smoke --duration 180
+   ```
+3. Every record is automatically labeled with:
+   - `session_mode`
+   - `test_type`
+   - `expected_odor_class`
+   - `session_label`
+   - `session_notes`
 
 ### Example Output
 
@@ -205,9 +237,12 @@ For improved classification accuracy, use Bosch BME AI-Studio:
 
 1. **Collect Training Data**
    ```bash
-   python3 -m src.main --log-dir training_data
-   # Expose sensor to target odors while running
-   # Label data manually in the JSON logs
+   # Baseline first
+   python3 -m src.main --log-dir training_data --run-mode baseline --test-type baseline_clean_air --duration 300
+
+   # Then labeled odor sessions
+   python3 -m src.main --log-dir training_data --run-mode odor_test --test-type smoke --duration 180
+   python3 -m src.main --log-dir training_data --run-mode odor_test --test-type food_strong --duration 180
    ```
 
 2. **Export Session Data**
